@@ -83,3 +83,16 @@ if __name__=="__main__":
         elapsed_time += end - start
     average = elapsed_time / N
     print("{:45}{:<15.6f}{:<15.6f}".format("Contiguous access, vectorization", elapsed_time, average))
+
+
+    array1, array2, buffer_array = SETUP()
+    elapsed_time = 0.0
+    for _ in range(N):
+        start = time.time()
+
+        buffer_array = array1 + array2
+
+        end = time.time()
+        elapsed_time += end - start
+    average = elapsed_time / N
+    print("{:45}{:<15.6f}{:<15.6f}".format("Numpy arithmetic", elapsed_time, average))
