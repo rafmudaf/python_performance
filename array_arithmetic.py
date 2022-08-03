@@ -59,12 +59,25 @@ if __name__=="__main__":
     for _ in range(N):
         start = time.time()
 
+        buffer_array[:] = array1 * array2 + array1 * array2
+
+        end = time.time()
+        elapsed_time += end - start
+    average = elapsed_time / N
+    print("{:45}{:<15.6f}{:<15.6f}".format("Pure Numpy arithmetic with [:] onthe LHS", elapsed_time, average))
+
+
+    array1, array2, buffer_array = SETUP()
+    elapsed_time = 0.0
+    for _ in range(N):
+        start = time.time()
+
         buffer_array = array1 * array2 + array1 * array2
 
         end = time.time()
         elapsed_time += end - start
     average = elapsed_time / N
-    print("{:45}{:<15.6f}{:<15.6f}".format("Pure Numpy arithmetic", elapsed_time, average))
+    print("{:45}{:<15.6f}{:<15.6f}".format("Pure Numpy arithmetic, no colon", elapsed_time, average))
 
 
     array1, array2, buffer_array = SETUP()
@@ -78,3 +91,73 @@ if __name__=="__main__":
         elapsed_time += end - start
     average = elapsed_time / N
     print("{:45}{:<15.6f}{:<15.6f}".format("numexpr", elapsed_time, average))
+
+
+    # Iterating over difference indeces...
+
+    print("Iterating over a difference index in a 5D array...")
+    print("  array[0,1,2,3,4]")
+
+    DIM = 40
+
+    shape = ( DIM, DIM, DIM, DIM, DIM )
+    array1 = np.ones(shape)
+
+    elapsed_time = 0.0
+    for _ in range(N):
+        start = time.time()
+
+        for i in range(DIM):
+            a = array1[:,:,:,:,i] + 1
+
+        end = time.time()
+        elapsed_time += end - start
+    average = elapsed_time / N
+    print("{:45}{:<15.6f}{:<15.6f}".format("4", elapsed_time, average))
+
+    elapsed_time = 0.0
+    for _ in range(N):
+        start = time.time()
+
+        for i in range(DIM):
+            a = array1[:,:,:,i,:] + 1
+
+        end = time.time()
+        elapsed_time += end - start
+    average = elapsed_time / N
+    print("{:45}{:<15.6f}{:<15.6f}".format("3", elapsed_time, average))
+
+    elapsed_time = 0.0
+    for _ in range(N):
+        start = time.time()
+        for i in range(DIM):
+            a = array1[:,:,i,:,:] + 1
+
+        end = time.time()
+        elapsed_time += end - start
+    average = elapsed_time / N
+    print("{:45}{:<15.6f}{:<15.6f}".format("2", elapsed_time, average))
+
+    elapsed_time = 0.0
+    for _ in range(N):
+        start = time.time()
+
+        for i in range(DIM):
+            a = array1[:,i,:,:,:] + 1
+
+        end = time.time()
+        elapsed_time += end - start
+    average = elapsed_time / N
+    print("{:45}{:<15.6f}{:<15.6f}".format("1", elapsed_time, average))
+
+    elapsed_time = 0.0
+    for _ in range(N):
+        start = time.time()
+
+        for i in range(DIM):
+            a = array1[i,:,:,:,:] + 1
+
+        end = time.time()
+        elapsed_time += end - start
+    average = elapsed_time / N
+    print("{:45}{:<15.6f}{:<15.6f}".format("0", elapsed_time, average))
