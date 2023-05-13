@@ -177,3 +177,27 @@ if __name__=="__main__":
         elapsed_time += end - start
     average = elapsed_time / N
     print("{:45}{:<15.6f}{:<15.6f}".format("0", elapsed_time, average))
+
+
+    # Scaling when iterating over the middle index
+
+    BASE_DIM = 10
+    N = 10
+    for i in range(10):
+        DIM = 10 ** i
+        print(DIM)
+        shape = ( 25, 72, DIM, 3, 3 )
+        array1 = np.ones(shape)
+
+        elapsed_time = 0.0
+        for _ in range(N):
+            start = time.time()
+            for i in range(DIM):
+                a = array1[:,:,i,:,:] + 1
+
+            end = time.time()
+            elapsed_time += end - start
+        average = elapsed_time / N
+
+        array_size = int(np.prod(shape) * 8 / (1000 * 1000))
+        print("{:8d} MB {:<15.6f}{:<15.6f}".format(array_size, elapsed_time, average))
