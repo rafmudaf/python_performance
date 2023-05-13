@@ -8,7 +8,8 @@ import time
 print("Configuration")
 # Python float is 64 bit / 8 byte
 ARRAY_SIZE = 1000 * 1000 * 10
-print("- Size of data array: {} MB".format(ARRAY_SIZE * 8 / (1000 * 1000)))
+size_of_array = ARRAY_SIZE * 8 / (1024 * 1024)
+print("- Size of data array: {} MiB".format(size_of_array))
 
 N = 10
 print("- Number of iterations to average: {}".format(N))
@@ -19,6 +20,20 @@ def SETUP():
     buffer_array = np.empty(ARRAY_SIZE)
     return array1, array2, buffer_array
 
+def size_of(array: np.ndarray) -> float:
+    """
+    Calculates the size in memory of a Numpy array
+    in MiB.
+    """
+    element_dtype = array.dtype.type
+
+    element_size = 0
+    if "32" in str(element_dtype):
+        element_size = 4  # byte
+    elif "64" in str(element_dtype):
+        element_size = 8  # byte
+
+    return float( np.prod(array.shape) * element_size / (1024 * 1024) )
 
 if __name__=="__main__":
     # gc.disable()
@@ -39,6 +54,7 @@ if __name__=="__main__":
     average = elapsed_time / N
     print("{:45}{:<15.6f}{:<15.6f}".format("Non-contiguous access, vectorization", elapsed_time, average))
 
+    print( size_of(array1) + size_of(array2) + size_of(buffer_array) + size_of(index_map) )
 
     array1, array2, buffer_array = SETUP()
     index_map = np.arange(0, ARRAY_SIZE)
